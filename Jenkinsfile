@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'rammmmu/finsecure-pay'
         IMAGE_TAG = "${env.BUILD_NUMBER}"
-        CREDENTIALS_ID = 'dockerhub-credentials'
+        CREDENTIALS_ID = 'dockerhub-credentials' // Your Jenkins credentials ID for Docker Hub
     }
 
     stages {
@@ -22,6 +22,7 @@ pipeline {
 
         stage('Test') {
             steps {
+                // Runs JUnit 5 tests. A failed test will abort the pipeline.
                 bat './mvnw test'
             }
         }
@@ -34,26 +35,27 @@ pipeline {
 
         stage('Security Checks') {
             steps {
-                echo 'Running static analysis and security checks...'
+                echo 'Running security checks...'
                 bat './mvnw verify -DskipTests || exit 0'
             }
         }
 
         stage('Container Build') {
             steps {
-                script {
-                    app = docker.build("${env.DOCKER_IMAGE}:${env.IMAGE_TAG}")
-                }
+                echo 'Building Docker image...'
+                bat "docker build -t ${env.DOCKER_IMAGE}:${env.IMAGE_TAG} -t ${env.DOCKER_IMAGE}:latest ."
             }
         }
 
         stage('Push') {
             steps {
-                script {
-                    docker.withRegistry('https://index.docker.io/v1/', "${env.CREDENTIALS_ID}") {
-                        app.push("${env.IMAGE_TAG}")
-                        app.push("latest")
-                    }
+                echo 'Pushing Docker image to registry...'
+                withCredentials([usernamePassword(credentialsId: "${env.CREDENTIALS_ID}", 
+                                                  usernameVariable: 'DOCKER_USER', 
+                                                  passwordVariable: 'DOCKER_PASS')]) {
+                    bat "echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin"
+                    bat "docker push ${env.DOCKER_IMAGE}:${env.IMAGE_TAG}"
+                    bat "docker push ${env.DOCKER_IMAGE}:latest"
                 }
             }
         }
@@ -69,7 +71,7 @@ pipeline {
 
     post {
         success {
-            echo 'Pipeline successfully executed and new version deployed!'
+            echo 'Pipeline successfully executed, imaged pushed, and Kubernetes rolled out!'
         }
         failure {
             echo 'Pipeline failed! Deployment was safely aborted.'
