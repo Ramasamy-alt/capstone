@@ -22,7 +22,7 @@ pipeline {
 
         stage('Test') {
             steps {
-                // Runs JUnit 5 tests. If any test fails, pipeline stops here.
+                // Runs JUnit 5 tests.If any test fails, pipeline stops here.
                 sh './mvnw test'
             }
         }
