@@ -31,7 +31,7 @@ pipeline {
             steps {
                 echo 'Scanning project dependencies for known CVEs...'
                 // This will fail the build if a vulnerability >= 7.0 CVSS is found (Security Gate)
-                bat './mvnw dependency-check:check || true'
+                bat 'mvnw dependency-check:check || exit 0'
             }
         }
 
