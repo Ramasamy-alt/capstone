@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'rammmmu/finsecure-pay'
         IMAGE_TAG = "${env.BUILD_NUMBER}"
-        CREDENTIALS_ID = 'dockerhub-credentials' // Configure this in Jenkins credentials manager
+        CREDENTIALS_ID = 'dockerhub-credentials'
     }
 
     stages {
