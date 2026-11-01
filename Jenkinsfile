@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     environment {
-        DOCKER_IMAGE = 'your-dockerhub-username/finsecure-pay'
+        DOCKER_IMAGE = 'rammmmu/finsecure-pay'
         IMAGE_TAG = "${env.BUILD_NUMBER}"
         CREDENTIALS_ID = 'dockerhub-credentials'
     }
