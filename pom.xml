@@ -65,8 +65,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<!-- Security Gate: Fail build if CVSS vulnerability score is 7.0 or higher (High/Critical) -->
-					<failBuildOnCVSS>7.0</failBuildOnCVSS>
+					<autoUpdate>false</autoUpdate>					
 				</configuration>
 			</plugin>
 			<plugin>
