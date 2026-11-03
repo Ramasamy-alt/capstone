@@ -72,8 +72,8 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying to Kubernetes...'
-                bat "kubectl set image deployment/finsecure-deployment finsecure-pay=${env.DOCKER_IMAGE}:${env.IMAGE_TAG}"
-                bat 'kubectl rollout status deployment/finsecure-deployment'
+                bat "\"C:\\Program Files\\Docker\\Docker\\resources\\bin\\kubectl.exe\" set image deployment/finsecure-deployment finsecure-pay=${env.DOCKER_IMAGE}:${env.IMAGE_TAG}"
+                bat "\"C:\\Program Files\\Docker\\Docker\\resources\\bin\\kubectl.exe\" rollout status deployment/finsecure-deployment"
             }
         }
     }
